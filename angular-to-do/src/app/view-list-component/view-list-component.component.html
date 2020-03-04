@@ -1,0 +1,64 @@
+<div class="row m-4" align="center">
+    <div class="col-6">
+        <mat-card class="example-card">
+            <mat-card-header>
+              <mat-card-title>TO-DO LIST</mat-card-title>
+            </mat-card-header>
+            <table mat-table
+            [dataSource]="dataSource" multiTemplateDataRows>
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef> Title </th>
+              <td mat-cell *matCellDef="let element"> {{element.title | titlecase }} </td>
+            </ng-container>
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef> Action </th>
+              <td mat-cell *matCellDef="let element"> 
+                  <button mat-icon-button color="primary" aria-label="Example icon-button with a heart icon" (click)="deleteList(element); $event.stopPropagation();">
+                      <mat-icon matTooltip="Delete">delete</mat-icon>
+                  </button>
+              </td>
+            </ng-container>
+          
+            <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+            <ng-container matColumnDef="expandedDetail">
+              <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+                <div class="example-element-detail"
+                      [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+                  <!-- <div class="col-12"> <h5><strong>Title : </strong></h5>{{element.title}} </div><br> -->
+                  <div class="row pt-4 pb-4">
+                      <div class="col-8"><h5><strong>Description : </strong></h5>{{element.description}}</div>
+                      <div class="col-4 pl-4" style="margin-top: -1.8%;"><button mat-icon-button color="primary" aria-label="Example icon-button with a heart icon" (click)="editList(element); $event.stopPropagation();">
+                          <mat-icon matTooltip="Edit">edit</mat-icon>
+                      </button></div>
+                  </div>
+                  
+                </div>
+              </td>
+            </ng-container>
+     
+            <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+            <tr mat-row *matRowDef="let element; columns: columnsToDisplay;"
+                class="example-element-row"
+                [class.example-expanded-row]="expandedElement === element"
+                (click)="expandedElement = expandedElement === element ? null : element">
+            </tr>
+            <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+            </table>
+            <ng-container *ngIf="dataSource.data.length == 0">
+              <div class="p-4"><h5 style="color: grey">You must Do Something!</h5></div>
+            </ng-container>
+            <mat-paginator [pageSizeOptions]="[5, 10]" showFirstLastButtons></mat-paginator>
+            </mat-card>
+       
+    </div>
+    <div class="col-6">
+        <mat-card class="example-card">
+            <mat-card-header>
+              <div mat-card-avatar class="example-header-image"></div>
+              <mat-card-title>ADD TASK</mat-card-title>
+            </mat-card-header>
+            <app-add-list-component (addList)='onAddList($event)'> </app-add-list-component>
+        </mat-card>
+    </div>
+</div>
+
